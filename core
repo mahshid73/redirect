@@ -1,0 +1,19 @@
+<?php
+/*
+Plugin Name:  user api
+Plugin URI: http://wordpress.org/plugins/hello-dolly/
+Description: user api
+Author: مهشید پویه
+Version: 1.0.0
+License: GPLv2 or later
+Author URI: http://sample-mp.local
+*/
+defined('ABSPATH') || exit;
+//include_once (ABSPATH.'wp-includes/pluggable.php');
+define('UA_PLUGIN_DIR',plugin_dir_path(__FILE__));
+const UA_PLUGIN_INC = UA_PLUGIN_DIR . '_inc/';
+const UA_PLUGIN_VIEW = UA_PLUGIN_DIR .'view/';
+if(is_admin()){
+    include UA_PLUGIN_INC.'admin/menu.php';
+
+}
