@@ -1,0 +1,50 @@
+<?php
+add_action('admin_menu','ua_register_menus');
+function ua_register_menus(){
+    add_menu_page(' VIP مدیریت کاربران',
+        'مدیریت کاربران vip',
+        'manage_options',
+        'ua_home',
+        'ua_main_page'
+    );
+    add_submenu_page('ua_home',
+        'لیست کاربران',
+        'لیست کاربران',
+        'manage_options',
+        'user_list',
+        'ua_users_list'
+    );
+    add_submenu_page('ua_home',
+        'افزودن کاربر',
+        'افزودن کاربر',
+        'manage_options',
+        'create_new_user',
+        'ua_create_new_user'
+    );
+
+}
+function ua_main_page(){
+    echo 'صفحه اصلی پلاگین';
+}
+function ua_users_list()
+{
+    include UA_PLUGIN_VIEW .'admin/user-list.php';
+}
+function ua_create_new_user()
+{
+    if (isset($_POST['submit-user'])){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $password = wp_generate_password(8);
+            $userdata=[
+//              'user_login' => $_POST['username'],
+//              'user_email' => $_POST['user_email'],
+//              'user_pass' => $password,
+                'user_login' =>apply_filters('pre_user_login',$_POST['username']),
+                'user_email' =>apply_filters('pre_user_email',$_POST['user_email']),
+                'user_pass' =>apply_filters('pre_user_pass',$password),
+            ];
+            wp_insert_user($userdata);
+        }
+    }
+    include UA_PLUGIN_VIEW . 'admin/create-user.php';
+}
