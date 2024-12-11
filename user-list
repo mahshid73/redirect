@@ -1,0 +1,43 @@
+<?php
+if(isset($_GET['action']) && isset($_GET['id'])){
+    if($_GET['action'] == 'delete' && intval($_GET['id']) && $_GET['id'] != null){
+        $del_user = wp_delete_user($_GET['id']);
+        if ($del_user){
+            wp_redirect(admin_url('admin.php?page=user_list'));
+        }else{
+
+        }
+    }
+}
+?>
+<div class="wrap">
+    <h1>لیست کاربران</h1>
+    <table class="widefat">
+        <thead>
+        <tr>
+            <th>آیدی</th>
+            <th>نام کاربری</th>
+            <th>ایمیل</th>
+            <th>نام نمایش</th>
+            <th>تلفن</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $users = get_users();
+        foreach($users as $user):
+        ?>
+        <tr>
+            <td><?php echo $user->ID ?></td>
+            <td><?php echo $user->user_login ?></td>
+            <td><?php echo $user->user_email ?></td>
+            <td><?php echo $user->display_name ?></td>
+            <td>
+                <a href="" class="dashicons dashicons-edit"></a>
+                <a href="<?php echo $_SERVER['REQUEST_URI'].'&action=delete'.'&id='.$user->ID ?>" class="dashicons dashicons-trash"></a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
