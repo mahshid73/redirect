@@ -1,14 +1,21 @@
 <?php
-if(isset($_GET['action']) && isset($_GET['id'])){
-    if($_GET['action'] == 'delete' && intval($_GET['id']) && $_GET['id'] != null){
-        $del_user = wp_delete_user($_GET['id']);
-        if ($del_user){
-            wp_redirect(admin_url('admin.php?page=user_list'));
-        }else{
-
+add_action('admin_init', 'handle_user_delete');
+function handle_user_delete() {
+    if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id']) && is_numeric($_GET['id'])) {
+        $user_id = intval($_GET['id']);
+        if ($user_id > 0) { // چک کردن معتبر بودن ID کاربر
+            $deleted = wp_delete_user($user_id);
+            if ($deleted) {
+                wp_safe_redirect(admin_url('admin.php?page=user_list'));
+                exit; // خیلی مهمه! بعد از ریدایرکت، اجرای اسکریپت رو متوقف کن.
+            } else {
+                // اگه حذف کاربر ناموفق بود، یه پیغام خطا نشون بده.
+                wp_die(__('Error deleting user.', 'user api')); // 'text-domain' رو با text domain قالب یا افزونه‌ات عوض کن.
+            }
         }
     }
 }
+function display_user_list() {  // تابعی برای نمایش لیست کاربران
 ?>
 <div class="wrap">
     <h1>لیست کاربران</h1>
@@ -34,10 +41,15 @@ if(isset($_GET['action']) && isset($_GET['id'])){
             <td><?php echo $user->display_name ?></td>
             <td>
                 <a href="" class="dashicons dashicons-edit"></a>
-                <a href="<?php echo $_SERVER['REQUEST_URI'].'&action=delete'.'&id='.$user->ID ?>" class="dashicons dashicons-trash"></a>
+                <a href="<?php echo add_query_arg(array('action' => 'delete', 'id' => $user->ID), admin_url('admin.php?page=user_list')); ?>" class="dashicons dashicons-trash"></a>
             </td>
         </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+<?php
+}
+// نمایش لیست کاربران
+display_user_list();
+?>
