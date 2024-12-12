@@ -10,7 +10,7 @@ function handle_user_delete() {
                 exit; // خیلی مهمه! بعد از ریدایرکت، اجرای اسکریپت رو متوقف کن.
             } else {
                 // اگه حذف کاربر ناموفق بود، یه پیغام خطا نشون بده.
-                wp_die(__('Error deleting user.', 'user api')); // 'text-domain' رو با text domain قالب یا افزونه‌ات عوض کن.
+                wp_die(__('Error deleting user.', 'user-api')); // 'text-domain' رو با text domain قالب یا افزونه‌ات عوض کن.
             }
         }
     }
